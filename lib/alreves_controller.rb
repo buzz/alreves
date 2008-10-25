@@ -1,7 +1,7 @@
 require 'action_controller'
 
-module buzz #:nodoc:
-	class ApplicationController < ActionController::Base
+module Buzz #:nodoc:
+	class AlrevesController < ActionController::Base
 	  attr_accessor :components
 
 	  def initialize
@@ -17,7 +17,7 @@ module buzz #:nodoc:
 	  end
 
 	  def init_layout
-	    @components.push(Component.new())
+	    @components.push(Buzz::Component.new())
 	    render :text => get_response_json
 	  end
 	end
