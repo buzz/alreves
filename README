@@ -1,0 +1,28 @@
+alreves 2008 by buzz(AT)l4m1(DOT)de
+ 
+-- ALREVES
+ 
+Alreves is an web application framework based on an unusual design
+concept. It's still in early development.
+ 
+And the idea behind it?
+ 
+The short answer:
+Alreves moves the application view entirely to the client's computer.
+ 
+A bit longer answer:
+While usual web application frameworks generate the HTML-code on the
+server-side Alreves goes the other way around and processes templates
+directly in the user's web browser.
+
+-- INSTALL
+
+Alreves comes as Rails plugin. Install as a git submodule into your rails project:
+ 
+ $ git submodule add git://github.com/buzz/alreves.git vendor/plugins/alreves
+
+-- LICENSE
+ 
+Alreves is free software. It's released under the GPL v2. See file
+LICENSE.
+
