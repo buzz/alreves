@@ -1,7 +1,7 @@
 /*
  * Alreves JQuery plugin
  *
- * (c) 2008 Mirko Dietrich <buzz-AT-l4m1-DOT-de>
+ * (c) 2008 buzz
  * Licensed under the GPL
  *
  */
