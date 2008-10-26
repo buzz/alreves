@@ -15,16 +15,20 @@ jQuery.alreves = {
 
   /* engine caches */
   caches: {
-	templates: {}
+		templates: {},
+		macros: {}
   },
-
-  /* helper macros */
-  macros: '/javascripts/alreves-macros.tpl',
 
   /* update page with content */
   updatePage: function(components) {
 	if (this.request_count < 1) {
 	  jQuery.each(components, function(key, component) {
+			// for storing macros
+			component.data.macros = {}
+			// apply common macros
+      jQuery.each(jQuery.alreves.caches.macros, function(key, template) {
+				template.process(component.data);
+			});
 		  jQuery(component.dest).html(jQuery.alreves.caches.templates[component.template_name].process(component.data));
 		  jQuery(component.dest).fadeIn('slow');
 		});
@@ -43,13 +47,13 @@ jQuery.alreves = {
 				  type: "GET",
 					url: 'templates/'+component.template_name+'.tpl',
 					success: function(response) {
-					jQuery.alreves.caches.templates[component.template_name] = TrimPath.parseTemplate(response);
-					--jQuery.alreves.request_count;
-					jQuery.alreves.updatePage(components);
+						jQuery.alreves.caches.templates[component.template_name] = TrimPath.parseTemplate(response);
+						--jQuery.alreves.request_count;
+						jQuery.alreves.updatePage(components);
 				  },
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
-					console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
-					--jQuery.alreves.request_count;
+						console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
+						--jQuery.alreves.request_count;
 				  }
 				});
 			} else
@@ -68,14 +72,30 @@ jQuery.alreves = {
 
   /* Submit a form using post ajax request */
   submitForm: function(form) {
-	var fields = jQuery('#'+form+' :input').serializeArray();
-	this.loadURL(jQuery('#'+form).attr('action'), fields);
-	jQuery('#'+form+' :input').disable();
+		var fields = jQuery('#'+form+' :input').serializeArray();
+		this.loadURL(jQuery('#'+form).attr('action'), fields);
+		jQuery('#'+form+' :input').disable();
   },
 
   /* Inject stylesheet */
-  injectCSS: function(css_file) {
-    $('head').append('<link rel="stylesheet" type="text/css" href="'+css_file+'" />')
-  }
+  injectCSS: function(css_url) {
+    $('head').append('<link rel="stylesheet" type="text/css" href="'+css_url+'" />')
+  },
+
+  /* Add macro file */
+  addMacroFile: function(macro_url) {
+		if (typeof this.caches.macros[macro_url] == 'undefined') {
+			jQuery.ajax({
+				type: "GET",
+				url: macro_url,
+				success: function(response) {
+					jQuery.alreves.caches.macros[macro_url] = TrimPath.parseTemplate(response);
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
+				}
+			});
+		}
+	}
 }
 
