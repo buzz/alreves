@@ -1,0 +1,3 @@
+- ActionController::RequestForgeryProtection
+- provide default action "alreves_init"
+
