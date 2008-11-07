@@ -15,11 +15,56 @@ While usual web application frameworks generate the HTML-code on the
 server-side Alreves goes the other way around and processes templates
 directly in the user's web browser.
 
--- INSTALL
+-- FIRST STEPS
 
-Alreves comes as Rails plugin. Install as a git submodule into your rails project:
- 
- $ git submodule add git://github.com/buzz/alreves.git vendor/plugins/alreves
+To create the famous 'Hello World' example using Alreves on Rails:
+
+1. Create Rails project:
+
+ $ rails my_project
+
+2. Engines is an extension to the Rails own plugin system that Alreves depends
+on. So we install it first:
+
+ $ cd my_project 
+ $ script/plugin discover
+ $ script/plugin install engines
+
+Put this line in 'environment.rb' just below the
+require for Rails’ own boot.rb file:
+
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
+
+3. Install jRails plugin as Alreves uses jQuery and not Prototype.
+ $ script/plugin install http://ennerchi.googlecode.com/svn/trunk/plugins/jrails
+
+4. Alreves comes as Rails plugin:
+
+ $ script/plugin install git://github.com/buzz/alreves.git --force
+
+The '--force' is needed to make the script overwrite 'public/index.html' as
+Alreves needs this file to work. If you're adding Alreves to an existing
+project, make sure that you don't overwrite an important file.
+
+5. Alreves comes with some own special routes. Include the following line to your
+'routes.rb':
+
+map.from_plugin :alreves
+
+6. In 'app/controllers/application.rb' add action:
+
+  def alreves_init
+    @components.push(Component.new())
+    render :text => get_response_json
+  end
+
+Also comment out 'protect_from_forgery' in the same file.
+
+7. Create a minimal 'public/templates/border.tpl':
+
+<p>Hello World!</p>
+
+8. Run 'script/server' and fire up 'http://localhost:3000/'
 
 -- LICENSE
  
