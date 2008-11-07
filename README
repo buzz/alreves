@@ -51,12 +51,12 @@ project, make sure that you don't overwrite an important file.
 
 map.from_plugin :alreves
 
-6. In 'app/controllers/application.rb' add action:
+6. Make 'app/controllers/application.rb' subclass of AlrevesController:
 
-  def alreves_init
-    @components.push(Component.new())
-    render :text => get_response_json
-  end
+Add to the top of the file:
+  require 'alreves_controller'
+Change superclass:
+  class ApplicationController < AlrevesController
 
 Also comment out 'protect_from_forgery' in the same file.
 
