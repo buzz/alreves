@@ -38,30 +38,37 @@ jQuery.alreves = {
   },
 
   /* process server response */
-  processResponse: function(components) {
-  if (typeof components == 'object')
-    jQuery.each(components, function(key, component) {
-      if (typeof component.template_name != 'undefined' && typeof component.dest != 'undefined') {
-        // download template if not already cached
-        if (typeof jQuery.alreves.caches.templates[component.template_name] == 'undefined') {
-          ++jQuery.alreves.request_count;
-          jQuery.ajax({
-            type: "GET",
-            url: 'templates/'+component.template_name+'.tpl',
-            success: function(response) {
-              jQuery.alreves.caches.templates[component.template_name] = TrimPath.parseTemplate(response);
-              --jQuery.alreves.request_count;
-              jQuery.alreves.updatePage(components);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-              console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
-              --jQuery.alreves.request_count;
-            }
-          });
-        } else
-          jQuery.alreves.updatePage(components);
-      }
-    });
+  processResponse: function(response) {
+		// process components
+	  if (typeof response.components == 'object') {
+		  jQuery.each(response.components, function(key, component) {
+			  if (typeof component.template_name != 'undefined' && typeof component.dest != 'undefined') {
+				  // download template if not already cached
+				  if (typeof jQuery.alreves.caches.templates[component.template_name] == 'undefined') {
+					  ++jQuery.alreves.request_count;
+					  jQuery.ajax({
+						  type: "GET",
+						  url: 'templates/'+component.template_name+'.tpl',
+						  success: function(template) {
+							  jQuery.alreves.caches.templates[component.template_name] = TrimPath.parseTemplate(template);
+							  --jQuery.alreves.request_count;
+							  jQuery.alreves.updatePage(response.components);
+						  },
+						  error: function(XMLHttpRequest, textStatus, errorThrown) {
+							  console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
+							  --jQuery.alreves.request_count;
+						  }
+					  });
+				  } else
+					 jQuery.alreves.updatePage(response.components);
+			  }
+		  });
+	  }
+	  if (typeof response.client_actions == 'object') {
+			jQuery.each(response.client_actions, function() {
+ 				eval(this);
+			});
+		}
   },
 
   /* execute an action on server */
