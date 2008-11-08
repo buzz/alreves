@@ -30,41 +30,41 @@ on. So we install it first:
  $ script/plugin discover
  $ script/plugin install engines
 
-Put this line in 'environment.rb' just below the
+Put this line in 'config/environment.rb' just below the
 require for Rails’ own boot.rb file:
 
 require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
 
 3. Install jRails plugin as Alreves uses jQuery and not Prototype.
+
  $ script/plugin install http://ennerchi.googlecode.com/svn/trunk/plugins/jrails
 
 4. Alreves comes as Rails plugin:
 
- $ script/plugin install git://github.com/buzz/alreves.git --force
-
-The '--force' is needed to make the script overwrite 'public/index.html' as
-Alreves needs this file to work. If you're adding Alreves to an existing
-project, make sure that you don't overwrite an important file.
+ $ script/plugin install git://github.com/buzz/alreves.git
 
 5. Alreves comes with some own special routes. Include the following line to your
 'routes.rb':
 
 map.from_plugin :alreves
 
-6. Make 'app/controllers/application.rb' subclass of AlrevesController:
+6. Adjust 'app/controllers/application.rb':
 
 Add to the top of the file:
-  require 'alreves_controller'
-Change superclass:
-  class ApplicationController < AlrevesController
 
-Also comment out 'protect_from_forgery' in the same file.
+  require 'alreves_controller'
+
+Change class definition:
+
+  class ApplicationController < AlrevesController
 
 7. Create a minimal 'public/templates/border.tpl':
 
 <p>Hello World!</p>
 
-8. Run 'script/server' and fire up 'http://localhost:3000/'
+8. Delete 'public/index.html'
+
+9. Run 'script/server' and fire up 'http://localhost:3000/'
 
 -- LICENSE
  
