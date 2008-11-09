@@ -102,7 +102,8 @@ jQuery.alreves = {
       url: js_url,
       success: function(response) {
         eval(response);
-				callback();
+				if (typeof callback == 'function')
+					callback();
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
