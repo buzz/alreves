@@ -18,6 +18,10 @@ class AlrevesController < ActionController::Base
 
   # the default will be to generate json
   def default_render
-    render :json => {:components => @components, :client_actions => @client_actions}
+    components = []
+    @components.each do |c|
+      components << c.to_json
+    end
+    render :text => "{'components':[#{components.join(',')}],'client_actions':#{@client_actions.to_json}}"
   end
 end
