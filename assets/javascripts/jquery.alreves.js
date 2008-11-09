@@ -65,9 +65,9 @@ jQuery.alreves = {
 		  });
 	  }
 	  if (typeof response.client_actions == 'object') {
-			jQuery.each(response.client_actions, function() {
- 				eval(this);
-			});
+			for (var i = 0; i < response.client_actions.length; ++i) {
+				eval(response.client_actions[i]);
+      }
 		}
   },
 
