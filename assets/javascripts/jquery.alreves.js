@@ -24,17 +24,17 @@ jQuery.alreves = {
 
   /* update page with content */
   updatePage: function(components) {
-  if (this.request_count < 1) {
-    jQuery.each(components, function(key, component) {
-      // for storing macros
-      component.data.macros = {}
-      // apply common macros
-      jQuery.each(jQuery.alreves.caches.macros, function(key, template) {
-        template.process(component.data);
-      });
-      jQuery(component.dest).html(jQuery.alreves.caches.templates[component.template_name].process(component.data));
-    });
-  }
+		if (this.request_count < 1) {
+			jQuery.each(components, function(key, component) {
+				// for storing macros
+				component.data.macros = {}
+				// apply common macros
+				jQuery.each(jQuery.alreves.caches.macros, function(key, template) {
+					template.process(component.data);
+				});
+				jQuery(component.dest).html(jQuery.alreves.caches.templates[component.template_name].process(component.data));
+			});
+		}
   },
 
   /* process server response */
@@ -60,7 +60,7 @@ jQuery.alreves = {
 						  }
 					  });
 				  } else
-					 jQuery.alreves.updatePage(response.components);
+						jQuery.alreves.updatePage(response.components);
 			  }
 		  });
 	  }
@@ -73,10 +73,10 @@ jQuery.alreves = {
 
   /* execute an action on server */
   loadURL: function(url, post_data) {
-  if (!this.processing_state)
-    if (typeof post_data != 'object') {
-      post_data = {};
-    }
+		if (!this.processing_state)
+			if (typeof post_data != 'object') {
+				post_data = {};
+			}
     post_data.authenticity_token = this.authenticity_token;
     jQuery.post(url, post_data, function(response) {
       jQuery.alreves.processResponse(response);
@@ -92,7 +92,22 @@ jQuery.alreves = {
 
   /* Inject stylesheet */
   injectCSS: function(css_url) {
-    $('head').append('<link rel="stylesheet" type="text/css" href="'+css_url+'" />')
+    $('head').append('<link rel="stylesheet" type="text/css" href="'+css_url+'" />');
+  },
+
+  /* Inject javascript */
+  injectJS: function(js_url, callback) {
+    jQuery.ajax({
+      type: "GET",
+      url: js_url,
+      success: function(response) {
+        eval(response);
+				callback();
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
+      }
+    });
   },
 
   /* Add macro file */
@@ -111,4 +126,3 @@ jQuery.alreves = {
     }
   }
 }
-
