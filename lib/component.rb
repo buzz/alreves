@@ -10,7 +10,11 @@ class Component
   def to_json
     data = []
     @data.each do |key, value|
-      data.push "'#{key}':#{value[:data].to_json(value[:json_opts])}"
+      if value.is_a? ActiveRecord::Base
+        data.push "'#{key}':#{value[:data].to_json(value[:json_opts])}"
+      else
+        data.push "'#{key}':#{value[:data].to_json()}"
+      end
     end
     "{'dest':'#{@dest}','template_name':'#{@template_name}','data':{#{data.join(',')}}}"
   end
