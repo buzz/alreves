@@ -72,30 +72,42 @@ jQuery.alreves = {
   },
 
   /* execute an action on server */
-  loadURL: function(url, post_data) {
+  loadURL: function(url, options) {
+		var settings = jQuery.extend({post_data: {}, success: function(){}}, options);
 		if (!this.processing_state)
 			if (typeof post_data != 'object') {
 				post_data = {};
 			}
-    post_data.authenticity_token = this.authenticity_token;
-    jQuery.post(url, post_data, function(response) {
+    settings.post_data.authenticity_token = this.authenticity_token;
+    jQuery.post(url, settings.post_data, function(response) {
       jQuery.alreves.processResponse(response);
+			settings.success();
     }, 'json');
+		return jQuery;
   },
 
-  /* Submit a form using post ajax request */
-  submitForm: function(form) {
-    var fields = jQuery('#'+form+' :input').serializeArray();
-    this.loadURL(jQuery('#'+form).attr('action'), fields);
-    jQuery('#'+form+' :input').disable();
+  /* submit a form using post ajax request */
+  submitForm: function(form, options) {
+		settings = jQuery.extend({success: function(){}}, options);
+		f = jQuery(form);
+		if (f.length != 1)
+			return;
+		var inputs = f.find(':input');
+		var fields = {};
+    jQuery.each(inputs.serializeArray(), function(key, value){
+			fields[value.name] = value.value;
+		});
+    this.loadURL(f.attr('action'), {post_data: fields, success: settings.success});
+		return f;
   },
 
-  /* Inject stylesheet */
+  /* inject stylesheet */
   injectCSS: function(css_url) {
     $('head').append('<link rel="stylesheet" type="text/css" href="'+css_url+'" />');
+		return jQuery;
   },
 
-  /* Inject javascript */
+  /* inject javascript */
   injectJS: function(js_url, callback) {
     jQuery.ajax({
       type: "GET",
@@ -109,9 +121,10 @@ jQuery.alreves = {
         console.log('AJAX request error: ' + textStatus + ' (' + errorThrown + ')');
       }
     });
+		return jQuery;
   },
 
-  /* Add macro file */
+  /* add macro file */
   addMacroFile: function(macro_url) {
     if (typeof this.caches.macros[macro_url] == 'undefined') {
       jQuery.ajax({
@@ -125,5 +138,6 @@ jQuery.alreves = {
         }
       });
     }
+		return jQuery;
   }
 }
