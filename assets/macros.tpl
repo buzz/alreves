@@ -1,8 +1,12 @@
 {macro link(name, url, options)}
-  {if typeof options != 'object'}
-  	${%options = {}|eat%}
-	{/if}
-  <a href="${url}" onclick="{if typeof options.loadurl != 'undefined'}jQuery.alreves.loadURL('${options.loadurl}'{if typeof options.data != 'undefined'}, ${options.data}{/if});{/if}{if typeof options.js != 'undefined'}${options.js}{/if}"{if typeof options.id != 'undefined'} id="${options.id}"{/if}{if typeof options.class != 'undefined'} class="${options.class}"{/if}>${name}</a>
+{eval EOF}
+o = jQuery.extend({
+  id: '',
+  class: '',
+  target: '_self'
+}, options);
+EOF
+<a href="${url}"{if typeof o.loadurl != 'undefined'} onclick="jQuery.alreves.loadURL('${o.loadurl}'{if typeof o.loadoptions != 'undefined'}, ${o.loadoptions}{/if});${o.js}"{/if} id="${o.id}" class="${o.class}">${name}</a>
 {/macro}
-${macros.link = link |eat}
+${macros.link = link|eat}
 
